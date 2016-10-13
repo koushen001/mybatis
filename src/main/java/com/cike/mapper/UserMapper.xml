@@ -4,6 +4,43 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace命名空间，为了对sql语句进行隔离，方便管理,mapper开发dao模式，使用namespace有特殊作用 -->
 <mapper namespace="com.cike.mapper.UserMapper">
+
+	<!-- 将用户查询条件定义为sql片段，
+	建议对单表的查询条件单独抽取sql片段，提高公用性 
+	注意：不要将where标签放在sql片段
+	-->
+	<sql id="query_user_where">
+		<if test="userCustom!=null">
+			<if test="userCustom.username!=null and userCustom.username!=''">
+				username like '%${userCustom.username}%'
+			</if>
+			<!-- 根据id集合查询用户信息
+			collection：集合的属性
+			open：开始循环拼的串
+			close：结束循环拼接的串
+			item：每次循环到的对象
+			separator：每两次循环中间拼接的串
+			 -->
+			<foreach collection="ids" open="AND id in (" close=")" item="id" separator=",">
+				#{id}
+			</foreach>
+		</if>
+	</sql>
+	<!-- 定义resultMap
+	id:mapper.xml唯一标识
+	type:要映射的pojo类型
+	 -->
+	<resultMap type="user" id="userListResultMap">
+		<!-- 列名
+		id：要映射结果集的唯一标识，称为主键
+		column：结果集的列名
+		property：type指定的哪个属性中
+		 -->
+		 <id column="id_" property="id"/>
+		 <!-- result普通列的映射配置 -->
+		 <result column="username_" property="username"/>
+		 <result column="birthday_" property="birthday"/>
+	</resultMap>
 	<!-- 根据id查询用户信息，id唯一标识一个statement，#{}表示一个占位符
 		  如果#{}中传入简单类型的参数，#{}中的名称随意
 		 parameterType：输入参数的类型，通过#{}接收parameterType输入的参数
@@ -44,12 +81,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	parameterType：指定包装类型
 	-->
 	<select id="findUserList" parameterType="userQueryVo" resultType="user">
-		select * from user where username like '%${userCustom.username}%'
+		select * from user
+		<!-- where标签相当于where关键字，可以自动去除第一个and -->
+		<where>
+			<!-- 引用sql片段，如果sql片段和引用不在同一个namespace，必须前面加namesepace -->
+			<include refid="query_user_where"/>
+		</where>
+	</select>
+	<!-- 使用resultMap做结果映射
+	resultMap：如果引用resultMap位置和定义在一个xml，直接使用resultMap的id，不在同一个xml，则namespace+resultMap的id
+	 -->
+	<select id="findUserListResultMap" parameterType="userQueryVo" resultMap="userListResultMap">
+		select id id_,username username_,birthday birthday_ from user where username like '%${userCustom.username}%'
 	</select>
 	<!-- 输出简单类型
 	功能：自定义查询条件，返回查询记录个数，通常用于实现查询分页
 	 -->
 	 <select id="findUserCount" parameterType="userQueryVo" resultType="int">
-	 	select count(*) from user where username like '%${userCustom.username}%'
+	 	select count(*) from user
+		<!-- where标签相当于where关键字，可以自动去除第一个and -->
+		<where>
+			<!-- 引用sql片段，如果sql片段和引用不在同一个namespace，必须前面加namesepace -->
+			<include refid="query_user_where"/>
+		</where>
 	 </select>
 </mapper>

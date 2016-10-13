@@ -2,6 +2,7 @@ package com.cike.mapper;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -74,8 +75,29 @@ public class UserMapperTest {
 		UserQueryVo userQueryVo = new UserQueryVo();
 		UserCustom userCustom = new UserCustom();
 		userCustom.setUsername("小明");
+		List<Integer> ids = new ArrayList<Integer>();
+		ids.add(16);
+		ids.add(22);
 		userQueryVo.setUserCustom(userCustom);
+		userQueryVo.setIds(ids);
 		List<User> users = userMapper.findUserList(userQueryVo);
+		sqlSession.close();
+		for (User user : users) {
+			System.out.println(user);
+		}
+	}
+
+	@Test
+	public void testFindUserListResultMap() throws Exception {
+		SqlSession sqlSession = sessionFactory.openSession();
+		// 创建代理对象
+		UserMapper userMapper = sqlSession.getMapper(UserMapper.class);
+		// 构造查询条件
+		UserQueryVo userQueryVo = new UserQueryVo();
+		UserCustom userCustom = new UserCustom();
+		userCustom.setUsername("小明");
+		userQueryVo.setUserCustom(userCustom);
+		List<User> users = userMapper.findUserListResultMap(userQueryVo);
 		sqlSession.close();
 		for (User user : users) {
 			System.out.println(user);

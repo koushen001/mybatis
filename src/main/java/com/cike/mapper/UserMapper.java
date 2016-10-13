@@ -23,7 +23,9 @@ public interface UserMapper {
 
 	// 通过包装类型查询用户信息
 	public List<User> findUserList(UserQueryVo userQueryVo) throws Exception;
-	
+	//查询用户使用resultMap
+	public List<User> findUserListResultMap(UserQueryVo userQueryVo) throws Exception;
+
 	// 通过包装类型查询用户信息数
 	public int findUserCount(UserQueryVo userQueryVo) throws Exception;
 }
