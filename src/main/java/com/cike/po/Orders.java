@@ -1,9 +1,10 @@
 package com.cike.po;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class Orders {
+public class Orders implements Serializable{
     private Integer id;
 
     private Integer userId;

@@ -1,6 +1,8 @@
 package com.cike.po;
 
-public class Orderdetail {
+import java.io.Serializable;
+
+public class Orderdetail implements Serializable{
     private Integer id;
 
     private Integer ordersId;

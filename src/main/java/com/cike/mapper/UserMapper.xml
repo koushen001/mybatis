@@ -4,7 +4,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace命名空间，为了对sql语句进行隔离，方便管理,mapper开发dao模式，使用namespace有特殊作用 -->
 <mapper namespace="com.cike.mapper.UserMapper">
-
+	<!-- 开启二级缓存 -->
+	<!-- flushInterval：单位毫秒 -->
+	<cache flushInterval="120000"/>
 	<!-- 将用户查询条件定义为sql片段，
 	建议对单表的查询条件单独抽取sql片段，提高公用性 
 	注意：不要将where标签放在sql片段
