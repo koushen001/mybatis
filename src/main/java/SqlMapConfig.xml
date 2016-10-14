@@ -4,6 +4,13 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 <configuration>
 	<!-- 属性定义 加载一个properties文件 在 properties标签 中配置属性值 -->
 	<properties resource="db.properties"></properties>
+	<!-- 全局配置参数 -->
+	<settings>
+		<!-- 延迟加载总开关 -->
+		<setting name="lazyLoadingEnabled" value="true" />	
+		<!-- 设置按需加载 -->
+		<setting name="aggressiveLazyLoading" value="false" />
+	</settings>
 	<!-- 定义别名 -->
 	<typeAliases>
 		<!-- 单个别名定义，alias:别名，type：别名映射的类型 -->

@@ -10,6 +10,9 @@ public interface OrdersMapperCustom {
 	// 一对一查询，查询订单关联查询用户信息，使用resultType
 	public List<OrderCustom> findOrderUserList() throws Exception;
 
+	// 一对一查询延迟加载
+	public List<Orders> findOrderUserListLazyLoading() throws Exception;
+
 	// 一对一查询，查询订单关联查询用户信息，使用resultMap
 	public List<Orders> findOrderUserResultMap() throws Exception;
 

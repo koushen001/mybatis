@@ -69,4 +69,13 @@ public class OrdersMapperCustomTest {
 		}
 	}
 
+	@Test
+	public void testFindOrderUserListLazyLoading() throws Exception {
+		SqlSession sqlSession = sessionFactory.openSession();
+		OrdersMapperCustom ordersMapperCustom = sqlSession.getMapper(OrdersMapperCustom.class);
+		List<Orders> orders = ordersMapperCustom.findOrderUserListLazyLoading();
+		for (Orders order : orders) {
+			System.out.println(order.getUser());
+		}
+	}
 }

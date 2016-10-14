@@ -73,6 +73,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</collection>
 		</collection>
 	</resultMap>
+	<!-- 一对一查询延迟加载 -->
+	<resultMap type="orders" id="orderCustomLazyLoading">
+		<id column="id" property="id"/>
+		<result column="user_id" property="userId"/>
+		<result column="number" property="number"/>
+		<result column="createtime" property="createtime"/>
+		<result column="note" property="note"/>
+		<!-- 配置用户信息延迟加载 
+		select:延迟加载执行的sql所在的statement的id，如果不在同一个namespace需要加namespace
+		sql：根据用户id查询用户信息
+		column:关联查询的列
+		-->
+		<association property="user" select="com.cike.mapper.UserMapper.findUserById" column="user_id"></association>
+	</resultMap>
 	<!-- 一对一查询，使用resultType完成，查询订单关联用户信息 -->
 	<select id="findOrderUserList" resultType="orderCustom">
 		SELECT o.*,u.username,u.sex FROM orders o,user u WHERE o.user_id = u.id
@@ -92,5 +106,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		SELECT o.*,u.username,u.sex,od.id od_id,od.items_num,od.items_id,i.name items_name,i.detail items_detail
 		FROM orders o,user u,orderdetail od,items i
 		WHERE o.user_id = u.id and o.id = od.orders_id AND i.id = od.items_id
+	</select>
+	<!-- 一对一查询延迟加载
+	开始只查询订单，对用户信息延迟加载
+	 -->
+	<select id="findOrderUserListLazyLoading" resultMap="orderCustomLazyLoading">
+		SELECT o.* FROM orders o
 	</select>
 </mapper>
