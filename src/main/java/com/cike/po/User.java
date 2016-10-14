@@ -1,6 +1,7 @@
 package com.cike.po;
 
 import java.util.Date;
+import java.util.List;
 /**
  * po类
  * @author CIKE
@@ -12,6 +13,9 @@ public class User {
 	private String sex;// 性别
 	private Date birthday;// 生日
 	private String address;// 地址
+	
+	//订单
+	private List<Orders> orders;
 
 	public int getId() {
 		return id;
@@ -51,6 +55,14 @@ public class User {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public List<Orders> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<Orders> orders) {
+		this.orders = orders;
 	}
 
 	@Override

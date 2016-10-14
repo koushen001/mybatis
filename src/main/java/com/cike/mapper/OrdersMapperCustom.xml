@@ -3,8 +3,94 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cike.mapper.OrdersMapperCustom">
+	<!-- 一对一查询，使用resultMap -->
+	<resultMap type="orders" id="ordersUserResultMap">
+		<!-- id：订单关联用户查询的唯一标识 -->
+		<!-- 完成了订单信息的映射配置 -->
+		<id column="id" property="id"/>
+		<result column="user_id" property="userId"/>
+		<result column="number" property="number"/>
+		<result column="createtime" property="createtime"/>
+		<result column="note" property="note"/>
+		<!-- 完成关联信息映射
+		 association：用于对关联信息映射到单个POJO
+		 property：要将关联信息映射到orders的哪个属性
+		 javaType：关联信息映射到orders的属性的类型，是user类型
+		 -->
+		 <association property="user" javaType="user">
+		 	<!-- id关联信息的唯一标识
+		 	property：要映射到user哪个属性中
+		 	 -->
+		 	<id column="user_id" property="id"/>
+		 	<!-- result就是普通列的映射 -->
+		 	<result column="username" property="username"/>
+		 	<result column="sex" property="sex"/>
+		 </association>
+	</resultMap>
+	<!-- 一对多，查询订单及订单明细 -->
+	<resultMap type="orders" id="orderAndOrderDetails" extends="ordersUserResultMap">
+		<!-- 映射订单信息 -->
+		<!-- 映射用户信息 -->
+		<!-- 使用继承实现上面两个映射 -->
+		<!-- 映射订单明细 -->
+		<collection property="orderdetails" ofType="com.cike.po.Orderdetail">
+			<!-- id:关联订单明细的唯一标识
+			property：Orderdetail的属性名
+			 -->
+			<id column="od_id" property="id"/>
+			<result column="items_num" property="itemsNum"/>
+			<result column="items_id" property="itemsId"/>
+		</collection>
+	</resultMap>
+	<!-- 一对多查询，查询用户及订单关联订单明细和商品信息 -->
+	<resultMap type="user" id="userOrderDetails">
+		<!-- 用户信息 -->
+		<id column="user_id" property="id"/>
+		 <!-- result就是普通列的映射 -->
+	 	<result column="username" property="username"/>
+	 	<result column="sex" property="sex"/>
+		<!-- 订单信息 -->
+		<collection property="orders" ofType="com.cike.po.Orders">
+			<id column="id" property="id"/>
+			<result column="user_id" property="userId"/>
+			<result column="number" property="number"/>
+			<result column="createtime" property="createtime"/>
+			<result column="note" property="note"/>
+			<!-- 订单明细 -->
+			<collection property="orderdetails" ofType="com.cike.po.Orderdetail">
+				<!-- id:关联订单明细的唯一标识
+				property：Orderdetail的属性名
+				 -->
+				<id column="od_id" property="id"/>
+				<result column="items_num" property="itemsNum"/>
+				<result column="items_id" property="itemsId"/>
+				<!-- 商品信息 -->
+				<association property="items" javaType="com.cike.po.Items">
+					<id column="item_id" property="id"/>
+					<result column="items_name" property="name"/>
+					<result column="items_detail" property="detail"/>
+				</association>
+			</collection>
+		</collection>
+	</resultMap>
 	<!-- 一对一查询，使用resultType完成，查询订单关联用户信息 -->
 	<select id="findOrderUserList" resultType="orderCustom">
 		SELECT o.*,u.username,u.sex FROM orders o,user u WHERE o.user_id = u.id
+	</select>
+	<!-- 一对一查询，使用resultMap完成，查询订单关联用户信息 -->
+	<select id="findOrderUserResultMap" resultMap="ordersUserResultMap">
+		SELECT o.*,u.username,u.sex FROM orders o,user u WHERE o.user_id = u.id
+	</select>
+	<!-- 一对多查询，使用resultMap完成，查询订单关联订单明细 -->
+	<select id="findOrderAndOrderDetails" resultMap="orderAndOrderDetails">
+		SELECT o.*,u.username,u.sex,od.id od_id,od.items_num,od.items_id
+		FROM orders o,user u,orderdetail od 
+		WHERE o.user_id = u.id and o.id = od.orders_id
+	</select>
+	<!-- 一对多查询，使用resultMap完成，查询用户及订单关联订单明细和商品信息 -->
+	<select id="findUserOrderDetails" resultMap="userOrderDetails">
+		SELECT o.*,u.username,u.sex,od.id od_id,od.items_num,od.items_id,i.name items_name,i.detail items_detail
+		FROM orders o,user u,orderdetail od,items i
+		WHERE o.user_id = u.id and o.id = od.orders_id AND i.id = od.items_id
 	</select>
 </mapper>

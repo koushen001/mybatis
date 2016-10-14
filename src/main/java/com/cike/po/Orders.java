@@ -1,6 +1,7 @@
 package com.cike.po;
 
 import java.util.Date;
+import java.util.List;
 
 public class Orders {
     private Integer id;
@@ -12,6 +13,11 @@ public class Orders {
     private Date createtime;
 
     private String note;
+    //关联用户
+    private User user;
+    
+    //订单明细
+    private List<Orderdetail> orderdetails;
 
     public Integer getId() {
         return id;
@@ -52,4 +58,27 @@ public class Orders {
     public void setNote(String note) {
         this.note = note == null ? null : note.trim();
     }
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public List<Orderdetail> getOrderdetails() {
+		return orderdetails;
+	}
+
+	public void setOrderdetails(List<Orderdetail> orderdetails) {
+		this.orderdetails = orderdetails;
+	}
+
+	@Override
+	public String toString() {
+		return "Orders [id=" + id + ", userId=" + userId + ", number=" + number + ", createtime=" + createtime
+				+ ", note=" + note + ", user=" + user + "]";
+	}
+    
 }

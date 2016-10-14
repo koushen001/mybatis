@@ -8,6 +8,8 @@ public class Orderdetail {
     private Integer itemsId;
 
     private Integer itemsNum;
+    //商品
+    private Items items;
 
     public Integer getId() {
         return id;
@@ -40,4 +42,13 @@ public class Orderdetail {
     public void setItemsNum(Integer itemsNum) {
         this.itemsNum = itemsNum;
     }
+
+	public Items getItems() {
+		return items;
+	}
+
+	public void setItems(Items items) {
+		this.items = items;
+	}
+    
 }
