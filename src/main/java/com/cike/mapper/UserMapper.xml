@@ -6,7 +6,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.cike.mapper.UserMapper">
 	<!-- 开启二级缓存 -->
 	<!-- flushInterval：单位毫秒 -->
-	<cache flushInterval="120000"/>
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache">
+		<property name="timeToIdleSeconds" value="12000"/>
+        <property name="timeToLiveSeconds" value="3600"/>
+        <!-- 同ehcache参数maxElementsInMemory -->
+		<property name="maxEntriesLocalHeap" value="1000"/>
+		<!-- 同ehcache参数maxElementsOnDisk -->
+        <property name="maxEntriesLocalDisk" value="10000000"/>
+        <property name="memoryStoreEvictionPolicy" value="LRU"/>
+	</cache>
 	<!-- 将用户查询条件定义为sql片段，
 	建议对单表的查询条件单独抽取sql片段，提高公用性 
 	注意：不要将where标签放在sql片段
